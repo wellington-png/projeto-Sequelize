@@ -1,12 +1,14 @@
 const { Router } = require('express')
-const cursosController = require('../controllers/alunoController')
+const alunosController = require('../controllers/alunoController')
+const autenticado = require("../middlewares/verificarAutenticacao")
 
 const router = Router()
+router.use(['/alunos', '/alunos/:id'], autenticado)
 
-router.get('/alunos', cursosController.getAlunos)
-router.get('/alunos/:id', cursosController.getAlunoPorId)
-router.post('/alunos', cursosController.postAluno)
-router.put('/alunos/:id', cursosController.putAluno)
-router.delete('/alunos/:id', cursosController.deleteAluno)
+router.get('/alunos', alunosController.getAlunos)
+router.get('/alunos/:id', alunosController.getAlunoPorId)
+router.post('/alunos', alunosController.postAluno)
+router.put('/alunos/:id', alunosController.putAluno)
+router.delete('/alunos/:id', alunosController.deleteAluno)
 
 module.exports = router

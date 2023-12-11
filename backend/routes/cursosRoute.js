@@ -1,7 +1,9 @@
 const { Router } = require('express')
 const cursosController = require('../controllers/cursoController')
+const autenticado = require("../middlewares/verificarAutenticacao")
 
 const router = Router()
+router.use(['/cursos', '/cursos/:id', '/alunoscurso/:id'], autenticado)
 
 router.get('/cursos', cursosController.getCursos)
 router.get('/cursos/:id', cursosController.getCursoPorId)
