@@ -2,8 +2,8 @@ back:
 	cd backend && npm run dev
 
 front:
-	cd frontend && npm start
+	cd front && npm start
 
 install:
 	cd backend && npm install
-	cd frontend && npm install
+	cd front && npm install

@@ -37,7 +37,11 @@ class alunoController {
         return res.status(400).json({ Message: 'Email already exists' });
       }
 
-      const novoAlunoEnviado = await database.aluno.create(novoAluno);
+      let novoAlunoEnviado = await database.aluno.create(novoAluno);
+      novoAlunoEnviado = await database.aluno.findOne({
+        where: { id: novoAlunoEnviado.id },
+        include: [{ model: database.curso, attributes: ['curso'] }]
+      });
       return res.status(200).json(novoAlunoEnviado);
     } catch (e) {
       return res.status(500).json({ Message: e.message || 'Internal Server Error' });
@@ -57,7 +61,7 @@ class alunoController {
       }
 
       await database.aluno.update(novosDados, { where: { id: Number(id) } });
-      const aluno = await database.aluno.findOne({ where: { id: Number(id) } });
+      const aluno = await database.aluno.findOne({ where: { id: Number(id) }, include: [{ model: database.curso, attributes: ['curso'] }] });
       return res.status(200).json(aluno);
     } catch (e) {
       return res.status(500).json({ Message: e.message || 'Internal Server Error' });

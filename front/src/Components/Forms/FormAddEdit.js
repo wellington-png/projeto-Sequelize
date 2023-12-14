@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Alert } from 'reactstrap';
 import { useCookies } from 'react-cookie';
-
 
 function AddEditForm(props) {
   const [form, setValues] = useState({
@@ -14,15 +13,22 @@ function AddEditForm(props) {
   });
 
   const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
-
-
-  const [emailInputColor, setEmailInputColor] = useState(''); // State for email input color
+  const [emailInputColor, setEmailInputColor] = useState('');
+  const [message, setMessage] = useState(null);
 
   const onChange = (e) => {
     setValues({
       ...form,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const clearMessage = () => {
+    setMessage(null);
+  };
+
+  const showMessage = (msg, color) => {
+    setMessage({ msg, color });
   };
 
   const submitFormAdd = async (e) => {
@@ -33,7 +39,7 @@ function AddEditForm(props) {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${cookies.jwt}`
+          Authorization: `Bearer ${cookies.jwt}`,
         },
         body: JSON.stringify({
           nome: form.nome,
@@ -47,21 +53,18 @@ function AddEditForm(props) {
       const item = await response.json();
 
       if (item && item.Message && item.Message === 'Email already exists') {
-        // Display an alert
-        alert('Email already exists. Please use a different email.');
-
-        // Change the color of the email input
-        setEmailInputColor('red'); // Set the color to red or any other color you prefer
-      } else if (Array.isArray(item)) {
-        props.addItemToState(item[0]);
+        showMessage('Email already exists. Please use a different email.', 'danger');
+        setEmailInputColor('red');
+      } else if (item.id) {
+        props.addItemToState(item);
         props.toggle();
+        showMessage('Aluno adicionado com sucesso.', 'success');
       } else {
-        console.log('failure');
         window.location.reload();
-
       }
     } catch (err) {
       console.log(err);
+      showMessage('Erro ao adicionar aluno. Verifique os dados e tente novamente.', 'danger');
     }
   };
 
@@ -73,7 +76,7 @@ function AddEditForm(props) {
         method: 'put',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${cookies.jwt}`
+          Authorization: `Bearer ${cookies.jwt}`,
         },
         body: JSON.stringify({
           nome: form.nome,
@@ -85,20 +88,19 @@ function AddEditForm(props) {
       const item = await response.json();
 
       if (item && item.Message && item.Message === 'Email already exists') {
-        // Display an alert
-        alert('Email already exists. Please use a different email.');
-
-        // Change the color of the email input
-        setEmailInputColor('red'); // Set the color to red or any other color you prefer
-      } else if (Array.isArray(item)) {
-        props.updateState(item[0]);
+        showMessage('Email already exists. Please use a different email.', 'danger');
+        setEmailInputColor('red');
+      } else if (item.id) {
+        props.updateState(item);
         props.toggle();
+        showMessage('Aluno atualizado com sucesso.', 'success');
       } else {
         console.log('failure');
-        window.location.reload();
+        // window.location.reload();
       }
     } catch (err) {
       console.log(err);
+      showMessage('Erro ao atualizar aluno. Verifique os dados e tente novamente.', 'danger');
     }
   };
 
@@ -112,14 +114,13 @@ function AddEditForm(props) {
   const [cursos, setCursos] = useState([]);
 
   const getCursos = () => {
-    fetch('http://localhost:8000/cursos',
-      {
-        method: 'get',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${cookies.jwt}`
-        }
-      },)
+    fetch('http://localhost:8000/cursos', {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${cookies.jwt}`,
+      },
+    })
       .then((response) => response.json())
       .then((items) => setCursos(items))
       .catch((err) => console.log(err));
@@ -131,6 +132,11 @@ function AddEditForm(props) {
 
   return (
     <Form onSubmit={props.item ? submitFormEdit : submitFormAdd}>
+      {message && (
+        <Alert color={message.color} onClick={clearMessage} style={{ cursor: 'pointer' }}>
+          {message.msg}
+        </Alert>
+      )}
       <FormGroup>
         <Label for="first">Nome</Label>
         <Input type="text" name="nome" id="first" onChange={onChange} value={form.nome === null ? '' : form.nome} />
@@ -157,7 +163,7 @@ function AddEditForm(props) {
           ))}
         </Input>
       </FormGroup>
-      <Button>Submit</Button>
+      <Button>Salvar</Button>
     </Form>
   );
 }

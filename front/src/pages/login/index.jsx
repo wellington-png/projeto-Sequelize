@@ -1,10 +1,9 @@
 // Login.js
 import React, { useState } from 'react';
-import { Button, Form, FormGroup, Label, Input, Container, Row, Col } from 'reactstrap';
-import { login } from '../../services/AuthService'; // Update the path based on your project structure
+import { Button, Form, FormGroup, Label, Input, Container, Row, Col, Card, CardBody, CardTitle, CardText } from 'reactstrap';
+import { login } from '../../services/AuthService';
 import { useCookies } from 'react-cookie';
 import { useNavigate, Link } from 'react-router-dom';
-
 
 const Login = () => {
   const [cookies, setCookie] = useCookies(['jwt']);
@@ -42,25 +41,31 @@ const Login = () => {
     <Container>
       <Row className="justify-content-center mt-5">
         <Col md={6}>
-          <h2>Login</h2>
-          {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
-          <Form onSubmit={handleLogin}>
-            <FormGroup>
-              <Label for="username">Email</Label>
-              <Input type="text" name="email" id="email" onChange={handleChange} value={loginData.email} />
-            </FormGroup>
-            <FormGroup>
-              <Label for="password">Senha</Label>
-              <Input type="password" name="senha" id="password" onChange={handleChange} value={loginData.senha} />
-            </FormGroup>
-            <Button color="primary" type="submit">
-              Login
-            </Button>
-          </Form>
-        <br />
-          <p>
-            <Link to="/register">Faça seu cadastro</Link>
-          </p>
+          <Card>
+            <CardBody>
+              <CardTitle tag="h2">Login</CardTitle>
+              {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
+              <Form onSubmit={handleLogin}>
+                <FormGroup>
+                  <Label for="email">Email</Label>
+                  <Input type="text" name="email" id="email" onChange={handleChange} value={loginData.email} />
+                </FormGroup>
+                <FormGroup>
+                  <Label for="password">Senha</Label>
+                  <Input type="password" name="senha" id="password" onChange={handleChange} value={loginData.senha} />
+                </FormGroup>
+                <Button color="primary" type="submit">
+                  Login
+                </Button>
+              </Form>
+              <br />
+              <CardText>
+                <Link to="/register" className="btn btn-link">
+                  Faça seu cadastro
+                </Link>
+              </CardText>
+            </CardBody>
+          </Card>
         </Col>
       </Row>
     </Container>

@@ -15,20 +15,20 @@ function ModalForm(props) {
   let button = ''
   let title = ''
 
-  if (label === 'Edit') {
+  if (label === 'Editar') {
     button = <Button
       color="warning"
       onClick={toggle}
       style={{ float: "left", marginRight: "10px" }}>{label}
     </Button>
-    title = 'Edit Item'
+    title = 'Editar aluno'
   } else {
     button = <Button
       color="success"
       onClick={toggle}
       style={{ float: "left", marginRight: "10px" }}>{label}
     </Button>
-    title = 'Add New Item'
+    title = 'Adicionar novo aluno'
   }
 
 
