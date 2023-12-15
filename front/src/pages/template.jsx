@@ -16,7 +16,7 @@ const Template = ({ pageTitle, children }) => {
     <Container fluid className="App">
       <Row>
         <Col md={2} className="sidebar bg-dark text-light" style={{ height: '100vh' }}>
-          <Nav vertical>
+          <Nav vertical className="bg-dark p-3">
             <NavItem>
               <NavLink tag={Link} to="/cursos" className="text-light">
                 Cursos
@@ -29,7 +29,7 @@ const Template = ({ pageTitle, children }) => {
             </NavItem>
           </Nav>
           <Button color="danger" className="mt-3" onClick={handleLogout}>
-            Logout
+            Sair
           </Button>
         </Col>
         <Col md={10} className="content">
